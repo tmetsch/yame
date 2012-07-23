@@ -6,8 +6,8 @@ But feel free to fork and extend :-)
 
 This editor features:
 
-* All features a good editor should have: copy, paste, save file, open file,
-...
+* All features a good editor should have: copy, paste, undo, redo, save file,
+open file, ...
 * GUI with side-to-side edit and preview panel
 * Spell checking
 * A Tree view which shows the document structure
@@ -16,7 +16,11 @@ This editor features:
 
 A screen shot can be found [here](https://github.com/tmetsch/yame/raw/master/screenshot.png).
 
-Requirements:
+## Configuration
+
+Set the absolute path of the Markdown executable in the `default.cfg` file.
+
+## Requirements
 
 * [PySide](http://www.pyside.org/) (GUI)
 * [PyEnchant](http://packages.python.org/pyenchant/) (Spellchecking)
