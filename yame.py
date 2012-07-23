@@ -15,7 +15,7 @@ from PySide.QtGui import QMessageBox, QMainWindow
 
 class Yame(QMainWindow):
     """
-    Yet another Markdown Editor.
+    Yet Another Markdown Editor.
     """
 
     def __init__(self):
