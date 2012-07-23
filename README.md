@@ -1,4 +1,3 @@
-
 # Yet Another Markdown Editor
 
 I hacked this together mostly for personal use, so it is far from perfect!
@@ -6,7 +5,7 @@ But feel free to fork and extend :-)
 
 This editor features:
 
-* All features a good editor should have: copy, paste, undo, redo, save file,
+* All features a good editor should have: Keyboard shortcuts, copy, paste, undo, redo, save file,
 open file, ...
 * GUI with side-to-side edit and preview panel
 * Spell checking
