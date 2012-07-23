@@ -28,7 +28,7 @@ class Yame(QMainWindow):
         config = ConfigParser.ConfigParser()
         config.readfp(open('defaults.cfg'))
         self.parser = config.get('Markdown', 'parser')
-        print self.parser
+        
         # init
         self.filename = ''
         self.saved = True
@@ -221,6 +221,7 @@ class Yame(QMainWindow):
         self.editor.setFrameShape(QtGui.QFrame.StyledPanel)
 
         self.web = QWebView()
+        self.web.setZoomFactor(0.8)
         self.web.setHtml('')
         self.web.show()
 

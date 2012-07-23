@@ -23,6 +23,7 @@ Set the absolute path of the Markdown executable in the `default.cfg` file.
 ## Requirements
 
 * [PySide](http://www.pyside.org/) (GUI)
-* [PyEnchant](http://packages.python.org/pyenchant/) (Spellchecking)
+* [PyEnchant](http://packages.python.org/pyenchant/) (Spell checking)
 * [MultiMarkdown](http://fletcherpenney.net/multimarkdown/) or any other Markdown parser
+
 
