@@ -19,7 +19,7 @@ class TextEdit(QPlainTextEdit):
         """
         super(TextEdit, self).__init__()
 
-        self.setStyleSheet("font: 1.1em \"Courier\";")
+        self.setStyleSheet("font: 1.2em \"Courier\";")
 
         # Default dictionary based on the current locale.
         self.dict = enchant.Dict("de_DE")

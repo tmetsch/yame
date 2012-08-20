@@ -32,6 +32,7 @@ class Yame(QMainWindow):
         self.filename = ''
         self.saved = True
         self.sync = True
+        self.lastSearch = ''
         self.initUI()
 
     # File actions

@@ -19,10 +19,17 @@ A screen shot can be found [here](https://github.com/tmetsch/yame/raw/master/scr
 
 Set the absolute path of the Markdown executable in the `default.cfg` file.
 
+## Shortcuts
+
+* Ctrl-C, Ctrl-X and Ctrl-V - the obivous text operations
+* Ctrl-N, Ctrl-O and Ctrl-S - New, Open and Save...
+* Ctrl+F - Find in text
+* Ctrl+T - Toggle Preview
+* Ctrl+E - Export HTML file
+* Ctrl+Q - Exit
+
 ## Requirements
 
 * [PySide](http://www.pyside.org/) (GUI)
 * [PyEnchant](http://packages.python.org/pyenchant/) (Spell checking)
 * [MultiMarkdown](http://fletcherpenney.net/multimarkdown/) or any other Markdown parser
-
-
