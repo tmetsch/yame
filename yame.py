@@ -1,7 +1,6 @@
+#-*- coding: utf-8 -*-
 
 import ConfigParser
-import os
-
 import editor
 import sys
 
@@ -53,7 +52,7 @@ class Yame(QMainWindow):
         self.editor.clear()
         self.filename = ''
 
-    def openFile(self):
+    def openFile(self, filename = None):
         """
         Open a file.
         """
@@ -68,9 +67,12 @@ class Yame(QMainWindow):
                 return
 
         self.editor.clear()
-        fname, _ = QtGui.QFileDialog.getOpenFileName(self, 'Open file', '',
-            ("Markdown Files (*.txt *.md)"))
-        self.filename = fname
+        if not filename:
+            fname, _ = QtGui.QFileDialog.getOpenFileName(self, 'Open file', '',
+                ("Markdown Files (*.txt *.md)"))
+            self.filename = fname
+        else:
+            self.filename = filename
 
         f = open(fname, 'r')
 
@@ -111,8 +113,10 @@ class Yame(QMainWindow):
         """
         if self.sync is True:
             self.sync = False
+            self.web.hide()
         else:
             self.sync = True
+            self.web.show()
 
     def updateStructure(self):
         """
@@ -168,18 +172,28 @@ class Yame(QMainWindow):
         else:
             event.ignore()
 
+    def findWord(self):
+        """
+        Lookup a word.
+        """
+        text, ok = QtGui.QInputDialog.getText(self, 'Find Word', 
+            'Look for:', text=self.lastSearch)
+        
+        if ok:
+            self.lastSearch = text    
+            self.editor.find(text)
+
     # Markdown stuff
 
     def exportHtml(self):
         """
         Export to an HTML file.
         """
-        txt = self.editor.toPlainText().encode('latin-1')
-        p = Popen([self.parser], stdout=PIPE, stdin=PIPE, stderr=STDOUT,
-            shell=False)
+        txt = self.editor.toPlainText().encode('utf-8')
+        p = Popen([self.parser], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
         grep_stdout = p.communicate(input=txt)[0]
         fname, _ = QtGui.QFileDialog.getSaveFileName(self, 'Save HTML', '',
-            ("Markdown Files (*.html)"))
+            ("HTML Files (*.html)"))
 
         fel = open(fname, 'w')
         fel.write(grep_stdout)
@@ -194,10 +208,8 @@ class Yame(QMainWindow):
         self.updateStructure()
 
         y = self.web.page().mainFrame().scrollPosition().y()
-
         txt = self.editor.toPlainText().encode('latin-1')
-        p = Popen([self.parser], stdout=PIPE, stdin=PIPE, stderr=STDOUT,
-            shell=False)
+        p = Popen([self.parser], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
         grep_stdout = p.communicate(input=txt)[0]
         self.web.setHtml(grep_stdout)
         if y:
@@ -221,7 +233,7 @@ class Yame(QMainWindow):
         self.editor.setFrameShape(QtGui.QFrame.StyledPanel)
 
         self.web = QWebView()
-        self.web.setZoomFactor(0.8)
+        self.web.setZoomFactor(0.9)
         self.web.setHtml('')
         self.web.show()
 
@@ -264,11 +276,12 @@ class Yame(QMainWindow):
         saveAsAction.setStatusTip('Save document as')
         saveAsAction.triggered.connect(self.saveFileAs)
 
+        fileMenu.addSeparator()
+
         exitAction = fileMenu.addAction('&Exit')
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Exit application')
-        exitAction.triggered.connect(self.close)
-        fileMenu.addAction(exitAction)
+        exitAction.triggered.connect(self.close)        
 
         editMenu = menubar.addMenu('&Edit')
         toggleAction = editMenu.addAction('&Toggle Sync...')
@@ -280,6 +293,11 @@ class Yame(QMainWindow):
         exportAction.setShortcut('Ctrl+E')
         exportAction.setStatusTip('Export HTML')
         exportAction.triggered.connect(self.exportHtml)
+
+        searchAction = editMenu.addAction('&Find...')
+        searchAction.setShortcut('Ctrl+F')
+        searchAction.setStatusTip('Search for a word.')
+        searchAction.triggered.connect(self.findWord)
 
         # Toolbar
         combo = QtGui.QComboBox(self)
