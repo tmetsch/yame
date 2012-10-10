@@ -3,13 +3,14 @@
 import ConfigParser
 import editor
 import sys
+import os
 
 from subprocess import Popen, PIPE, STDOUT
 
 from PySide import QtGui
-from PySide.QtCore import QPoint, Qt
+from PySide.QtCore import QPoint, Qt, QUrl
 from PySide.QtWebKit import QWebView
-from PySide.QtGui import QMessageBox, QMainWindow
+from PySide.QtGui import QMessageBox, QMainWindow, QLabel
 
 
 class Yame(QMainWindow):
@@ -77,12 +78,17 @@ class Yame(QMainWindow):
 
         f = open(fname, 'r')
 
+        # change working directory
+        os.chdir(os.path.dirname(f.name))
+
         with f:
             tmp = f.read()
             tmp = tmp.decode('utf-8')
             self.editor.insertPlainText(tmp)
         f.close()
+
         self.saved = True
+        self.saveStatus.setText('Document saved: ' + str(self.saved))
 
     def saveFileAs(self):
         """
@@ -105,6 +111,7 @@ class Yame(QMainWindow):
             fel.write(line.encode('utf-8') + '\n')
         fel.close()
         self.saved = True
+        self.saveStatus.setText('Document saved: ' + str(self.saved))
 
     # GUI operations
 
@@ -145,6 +152,7 @@ class Yame(QMainWindow):
 
             line_nr += 1
         self.saved = False
+        self.saveStatus.setText('Document saved: ' + str(self.saved))
 
     def gotoLine(self):
         """
@@ -164,10 +172,12 @@ class Yame(QMainWindow):
         """
         Ask if the window can be closed before really closing.
         """
+        msg = "Are you sure to quit?"
+        if not self.saved:
+            msg += '\nWARNING - document is unsaved'
         reply = QtGui.QMessageBox.question(self, 'Message',
-            "Are you sure to quit?", QtGui.QMessageBox.Yes |
-            QtGui.QMessageBox.No, QtGui.QMessageBox.No)
-
+            msg , QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
+                                           QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
             event.accept()
         else:
@@ -204,14 +214,24 @@ class Yame(QMainWindow):
         """
         Parse the Markdown stuff.
         """
+        self.updateStructure()
         if self.sync is False:
             return
-        self.updateStructure()
 
         y = self.web.page().mainFrame().scrollPosition().y()
-        txt = self.editor.toPlainText().encode('latin-1')
-        p = Popen([self.parser], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-        grep_stdout = p.communicate(input=txt)[0]
+        txt = self.editor.toPlainText().encode('utf-8')
+
+        if txt is '' or None:
+            return
+
+        p = Popen([self.parser], stdout=PIPE, stdin=PIPE, stderr=STDOUT,
+            shell=False)
+        grep_stdout = p.communicate(input=txt)[0].decode('utf-8')
+        path = QUrl.fromUserInput(os.getcwd() + os.sep)
+        grep_stdout = grep_stdout.replace('img src=\"', 'img src=\"' +
+                                                        path.toString())
+        # Can't use baseUrl=path because external img will not be loaded
+        # than :-/
         self.web.setHtml(grep_stdout)
         if y:
             self.web.scroll(0, y)
@@ -317,6 +337,9 @@ class Yame(QMainWindow):
         self.toolbar.addWidget(combo)
 
         self.statusBar()
+        self.saveStatus = QLabel()
+        self.saveStatus.setText('Document saved: ' + str(self.saved))
+        self.statusBar().addWidget(self.saveStatus)
         self.setCentralWidget(splitter2)
 
         # The rest

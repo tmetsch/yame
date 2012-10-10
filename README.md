@@ -21,7 +21,7 @@ Set the absolute path of the Markdown executable in the `default.cfg` file.
 
 ## Shortcuts
 
-* Ctrl-C, Ctrl-X and Ctrl-V - the obivous text operations
+* Ctrl-C, Ctrl-X and Ctrl-V - the obvious text operations
 * Ctrl-N, Ctrl-O and Ctrl-S - New, Open and Save...
 * Ctrl+F - Find in text
 * Ctrl+T - Toggle Preview

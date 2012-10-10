@@ -19,7 +19,7 @@ class TextEdit(QPlainTextEdit):
         """
         super(TextEdit, self).__init__()
 
-        self.setStyleSheet("font: 1.2em \"Courier\";")
+        self.setStyleSheet("font: 10pt \"Lucida Console\";")
 
         # Default dictionary based on the current locale.
         self.dict = enchant.Dict("de_DE")
@@ -41,7 +41,7 @@ class TextEdit(QPlainTextEdit):
         self.setTabStopWidth(fontMetrics.width('i')*self._tabSize)
 
         option=self.document().defaultTextOption()
-        #option.setFlags(option.flags() | option.ShowLineAndParagraphSeparators)
+        # option.setFlags(option.flags() | option.ShowLineAndParagraphSeparators)
         option.setFlags(option.flags() | option.ShowTabsAndSpaces)
         self.document().setDefaultTextOption(option)
 
@@ -131,7 +131,7 @@ class TextEdit(QPlainTextEdit):
 
 class Highlighter(QSyntaxHighlighter):
     """
-    Syntac highlighter which will underline misspell words.
+    Syntax highlighter which will underline misspell words.
     """
 
     WORDS = u'(?iu)[\w\']+'
@@ -149,14 +149,14 @@ class Highlighter(QSyntaxHighlighter):
 
         text = unicode(text)
 
-        format = QTextCharFormat()
-        format.setUnderlineColor(Qt.red)
-        format.setUnderlineStyle(QTextCharFormat.SpellCheckUnderline)
+        error_format = QTextCharFormat()
+        error_format.setUnderlineColor(Qt.red)
+        error_format.setUnderlineStyle(QTextCharFormat.SpellCheckUnderline)
 
         for word_object in re.finditer(self.WORDS, text):
             if not self.dict.check(word_object.group()):
                 self.setFormat(word_object.start(),
-                    word_object.end() - word_object.start(), format)
+                    word_object.end() - word_object.start(), error_format)
 
 
 class SpellAction(QAction):
