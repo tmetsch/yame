@@ -18,7 +18,7 @@ class Yame(QMainWindow):
     Yet Another Markdown Editor.
     """
 
-    def __init__(self):
+    def __init__(self, filename=None):
         """
         Constructor.
         """
@@ -35,6 +35,9 @@ class Yame(QMainWindow):
         self.sync = True
         self.lastSearch = ''
         self.initUI()
+
+        if filename is not None:
+            self.openFile(filename)
 
     # File actions
 
@@ -74,6 +77,7 @@ class Yame(QMainWindow):
                 ("Markdown Files (*.txt *.md)"))
             self.filename = fname
         else:
+            fname = filename
             self.filename = filename
 
         f = open(fname, 'r')
@@ -353,8 +357,12 @@ def main():
     """
     Main routine.
     """
+    if len(sys.argv) > 1:
+        fname = sys.argv[1]
+    else:
+        fname = None
     app = QtGui.QApplication(sys.argv)
-    editor = Yame()
+    editor = Yame(filename=fname)
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
