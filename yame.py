@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import ConfigParser
@@ -10,7 +11,7 @@ from subprocess import Popen, PIPE, STDOUT
 from PySide import QtGui
 from PySide.QtCore import QPoint, Qt, QUrl
 from PySide.QtWebKit import QWebView
-from PySide.QtGui import QMessageBox, QMainWindow, QLabel
+from PySide.QtGui import QMessageBox, QMainWindow, QLabel, QIcon
 
 
 class Yame(QMainWindow):
@@ -237,6 +238,8 @@ class Yame(QMainWindow):
         # Can't use baseUrl=path because external img will not be loaded
         # than :-/
         self.web.setHtml(grep_stdout)
+        self.web.settings().setUserStyleSheetUrl(QUrl.fromLocalFile(os.getcwd()
+                                                 + os.sep + "/style.css"))
         if y:
             self.web.scroll(0, y)
             self.web.page().mainFrame().scroll(0, y)
@@ -285,16 +288,23 @@ class Yame(QMainWindow):
         newAction = fileMenu.addAction('&New')
         newAction.setShortcut('Ctrl+N')
         newAction.setStatusTip('New document')
+        icon = QIcon.fromTheme("document-new", QIcon("img/new.png"))
+        # print dir(icon), icon.isNull()
+        newAction.setIcon(icon)
         newAction.triggered.connect(self.newFile)
 
         openAction = fileMenu.addAction('&Open...')
         openAction.setShortcut('Ctrl+O')
         openAction.setStatusTip('Open document')
+        icon = QIcon.fromTheme("document-open", QIcon("img/open.png"))
+        openAction.setIcon(icon)
         openAction.triggered.connect(self.openFile)
 
         saveAction = fileMenu.addAction('&Save...')
         saveAction.setShortcut('Ctrl+S')
         saveAction.setStatusTip('Save document')
+        icon = QIcon.fromTheme("document-save", QIcon("img/save.png"))
+        saveAction.setIcon(icon)
         saveAction.triggered.connect(self.saveFile)
 
         saveAsAction = fileMenu.addAction('&Save As...')
@@ -312,16 +322,22 @@ class Yame(QMainWindow):
         toggleAction = editMenu.addAction('&Toggle Sync...')
         toggleAction.setShortcut('Ctrl+T')
         toggleAction.setStatusTip('Toggle sync between preview and editor.')
+        icon = QIcon.fromTheme("sync-synchronizing", QIcon("img/sync.png"))
+        toggleAction.setIcon(icon)
         toggleAction.triggered.connect(self.togglePanelSync)
 
         exportAction = editMenu.addAction('&Export HTML...')
         exportAction.setShortcut('Ctrl+E')
         exportAction.setStatusTip('Export HTML')
+        icon = QIcon.fromTheme("text-html", QIcon("img/export.png"))
+        exportAction.setIcon(icon)
         exportAction.triggered.connect(self.exportHtml)
 
         searchAction = editMenu.addAction('&Find...')
         searchAction.setShortcut('Ctrl+F')
         searchAction.setStatusTip('Search for a word.')
+        icon = QIcon.fromTheme("system-search", QIcon("img/search.png"))
+        searchAction.setIcon(icon)
         searchAction.triggered.connect(self.findWord)
 
         # Toolbar
@@ -335,6 +351,8 @@ class Yame(QMainWindow):
         self.toolbar.addAction(openAction)
         self.toolbar.addAction(saveAction)
         self.toolbar.addSeparator()
+        self.toolbar.addAction(searchAction)
+        self.toolbar.addSeparator()
         self.toolbar.addAction(toggleAction)
         self.toolbar.addAction(exportAction)
         self.toolbar.addSeparator()
@@ -347,6 +365,7 @@ class Yame(QMainWindow):
         self.setCentralWidget(splitter2)
 
         # The rest
+        self.setWindowIcon(QtGui.QIcon('img/icon.png')) 
         self.setGeometry(100, 100, 900, 600)
         self.showMaximized()
         self.setWindowTitle('YAME! - Yet Another Markdown Editor!')
