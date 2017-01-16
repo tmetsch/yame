@@ -13,7 +13,9 @@ open file, ...
 * Support for MultiMarkdown to get Maths, Tables etc. working
 * Export of HTML
 
-A screen shot can be found [here](https://github.com/tmetsch/yame/raw/master/screenshot.png).
+the obligatory screenshot:
+
+![here](./screenshot.png?raw=true "here")
 
 ## Configuration
 
